@@ -27,19 +27,14 @@ A cross-platform desktop application that converts your voice into optimized pro
    python run_gui.py
    ```
 
-**Note**: First startup may be slow due to model downloads. Remember to configure your API key in settings.
+**Note**: First startup may be slow due to model downloads. Configure your API key in the GUI settings.
 
-### API Configuration
+### Configuration
 
-1. **Configure LLM API**
-   - Copy the config template: `cp config/llm_config.json config/llm_config.json.backup`
-   - Edit `config/llm_config.json` and add your API key
-   - Supported providers: OpenAI, DeepSeek
-
-2. **Configure Whisper (Optional)**
-   ```bash
-   python scripts/configure_whisper.py
-   ```
+All settings can be configured through the GUI:
+- **LLM Provider & API Key**: OpenAI or DeepSeek
+- **Whisper Settings**: Device, model size, compute type
+- **Audio Device**: Select your microphone
 
 ### Command Line Mode
 ```bash
@@ -53,16 +48,6 @@ python src/main.py
 3. **View Results**: See your transcribed text and AI-enhanced prompt
 4. **Copy Output**: Use the copy button to copy the optimized prompt
 5. **Settings**: Access configuration options via the settings button
-
-### Settings Configuration
-
-Access settings to configure:
-- **LLM Provider**: Choose between OpenAI and DeepSeek
-- **API Key**: Set your API credentials
-- **Whisper Device**: CPU/CUDA/MPS inference device
-- **Model Size**: tiny/base/small/medium/large
-- **Compute Type**: int8/int16/float16/float32
-- **Input Device**: Select your preferred microphone
 
 ### Cache Management
 

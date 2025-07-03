@@ -27,19 +27,14 @@
    python run_gui.py
    ```
 
-**注意**: 首次启动可能较慢，因为需要下载模型。记得在设置中配置您的API密钥。
+**注意**: 首次启动可能较慢，因为需要下载模型。在GUI设置中配置您的API密钥。
 
-### API配置
+### 配置
 
-1. **配置LLM API**
-   - 复制配置模板: `cp config/llm_config.json config/llm_config.json.backup`
-   - 编辑 `config/llm_config.json` 并添加您的API密钥
-   - 支持的提供商: OpenAI, DeepSeek
-
-2. **配置Whisper（可选）**
-   ```bash
-   python scripts/configure_whisper.py
-   ```
+所有设置都可以通过GUI配置：
+- **LLM提供商和API密钥**: OpenAI 或 DeepSeek
+- **Whisper设置**: 设备、模型大小、计算类型
+- **音频设备**: 选择您的麦克风
 
 ### 命令行模式
 ```bash
@@ -53,16 +48,6 @@ python src/main.py
 3. **查看结果**: 查看转录文本和AI增强的提示词
 4. **复制输出**: 使用复制按钮复制优化的提示词
 5. **设置**: 通过设置按钮访问配置选项
-
-### 设置配置
-
-访问设置以配置：
-- **LLM提供商**: 在OpenAI和DeepSeek之间选择
-- **API密钥**: 设置您的API凭据
-- **Whisper设备**: CPU/CUDA/MPS推理设备
-- **模型大小**: tiny/base/small/medium/large
-- **计算类型**: int8/int16/float16/float32
-- **输入设备**: 选择您偏好的麦克风
 
 ### 缓存管理
 
