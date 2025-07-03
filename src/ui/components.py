@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QTextEdit, QPushButton, QHBoxLayout, QFrame, QStackedLayout, QSizePolicy
+    QWidget, QVBoxLayout, QLabel, QTextEdit, QPushButton, QHBoxLayout, QFrame, QStackedLayout, QSizePolicy, QDialog
 )
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QPainter, QColor, QPen, QBrush
@@ -441,7 +441,15 @@ class MainWidget(QWidget):
 
     def open_settings(self):
         dlg = SettingsDialog(self)
-        dlg.exec()
+        if dlg.exec() == QDialog.DialogCode.Accepted:
+            # 设置保存后，重新初始化LLM管理器
+            self.reload_configurations()
+    
+    def reload_configurations(self):
+        """重新加载所有配置"""
+        # 重新加载LLM管理器配置
+        self.llm_manager.reload_config()
+        print("所有配置已重新加载")
 
     def copy_prompt_text(self):
         from PyQt6.QtWidgets import QApplication

@@ -186,4 +186,10 @@ class LLMManager:
         with open(self.config_path, 'w', encoding='utf-8') as f:
             json.dump(self.config, f, indent=4, ensure_ascii=False)
         
-        print(f"配置文件已更新: {self.config_path}") 
+        print(f"配置文件已更新: {self.config_path}")
+    
+    def reload_config(self):
+        """重新加载配置文件并重新初始化提供商"""
+        self.config = self._load_config()
+        self._initialize_provider()
+        print("LLM配置已重新加载") 
