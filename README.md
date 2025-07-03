@@ -3,15 +3,6 @@ Voice to prompt, empowering your vibe coding
 
 A cross-platform desktop application that converts your voice into optimized prompts using AI-powered speech recognition and language model enhancement.
 
-## Features
-
-- **Voice Recording**: High-quality audio recording with real-time waveform visualization
-- **Speech-to-Text**: Powered by Whisper for accurate speech transcription
-- **AI Enhancement**: LLM-powered prompt optimization and rephrasing
-- **Cross-Platform**: Works on Windows and macOS
-- **Modern GUI**: Clean PyQt6 interface with intuitive controls
-- **Settings Management**: Easy configuration for audio devices and LLM providers
-
 ## Quick Start
 
 ### Prerequisites
@@ -59,19 +50,11 @@ python src/main.py
 
 ## Usage
 
-### Main Interface
-
 1. **Select Input Device**: Choose your microphone from the dropdown
 2. **Start Recording**: Click the record button to begin voice capture
 3. **View Results**: See your transcribed text and AI-enhanced prompt
 4. **Copy Output**: Use the copy button to copy the optimized prompt
 5. **Settings**: Access configuration options via the settings button
-
-### Recording Features
-
-- **Real-time Visualization**: See audio waveform during recording
-- **Auto-stop**: Automatically stops after 60 seconds or when silence is detected
-- **High Quality**: 44.1kHz sampling rate for optimal transcription
 
 ### Settings Configuration
 
@@ -94,22 +77,6 @@ python scripts/clear_cache.py clear
 
 # Force clear cache
 python scripts/clear_cache.py clear-force
-```
-
-## Project Structure
-
-```
-Talkie-Codie/
-├── src/                    # Main application code
-│   ├── audio/             # Audio processing modules
-│   ├── llm/               # Language model integration
-│   ├── ui/                # User interface components
-│   └── main_gui.py        # Main GUI application
-├── config/                # Configuration files
-├── scripts/               # Utility scripts
-├── assets/                # Icons and sounds
-├── docs/                  # Documentation
-└── cache/                 # Temporary files
 ```
 
 ## Dependencies
@@ -138,19 +105,6 @@ Talkie-Codie/
    - Check internet connection
    - Verify sufficient disk space
    - Try different model size in settings
-
-### Getting Help
-
-- Check the documentation in `docs/` folder
-- Review configuration guides for detailed setup instructions
-- Ensure all dependencies are properly installed
-
-## Development
-
-For development and extension:
-- Review source code comments for API integration
-- Check `docs/` folder for technical documentation
-- Follow the existing code structure for consistency
 
 ---
 
