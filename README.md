@@ -9,41 +9,39 @@ A cross-platform desktop application that converts your voice into optimized pro
 - Python 3.10 or higher
 - Microphone access
 
-### Installation
+### Run Application
 
-1. **Clone the repository**
+1. **Optional: Create virtual environment**
    ```bash
-   git clone <repository-url>
-   cd Talkie-Codie
+   # Using conda
+   conda create -n talkie-codie python=3.10
+   conda activate talkie-codie
+   
+   # Or using venv
+   python -m venv talkie-codie
+   source talkie-codie/bin/activate  # On Windows: talkie-codie\Scripts\activate
    ```
 
-2. **Install dependencies**
+2. **Launch GUI (auto-installs dependencies)**
    ```bash
-   pip install -r requirements.txt
+   python run_gui.py
    ```
 
-3. **Configure LLM API**
+**Note**: First startup may be slow due to model downloads. Remember to configure your API key in settings.
+
+### API Configuration
+
+1. **Configure LLM API**
    - Copy the config template: `cp config/llm_config.json config/llm_config.json.backup`
    - Edit `config/llm_config.json` and add your API key
    - Supported providers: OpenAI, DeepSeek
 
-4. **Configure Whisper (Optional)**
+2. **Configure Whisper (Optional)**
    ```bash
    python scripts/configure_whisper.py
    ```
 
-### Running the Application
-
-#### GUI Mode (Recommended)
-```bash
-# Auto-install dependencies and launch
-python run_gui.py
-
-# Or launch directly
-python src/main_gui.py
-```
-
-#### Command Line Mode
+### Command Line Mode
 ```bash
 python src/main.py
 ```

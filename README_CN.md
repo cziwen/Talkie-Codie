@@ -9,41 +9,39 @@
 - Python 3.10 或更高版本
 - 麦克风访问权限
 
-### 安装步骤
+### 运行应用程序
 
-1. **克隆仓库**
+1. **可选：创建虚拟环境**
    ```bash
-   git clone <repository-url>
-   cd Talkie-Codie
+   # 使用 conda
+   conda create -n talkie-codie python=3.10
+   conda activate talkie-codie
+   
+   # 或使用 venv
+   python -m venv talkie-codie
+   source talkie-codie/bin/activate  # Windows: talkie-codie\Scripts\activate
    ```
 
-2. **安装依赖**
+2. **启动图形界面（自动安装依赖）**
    ```bash
-   pip install -r requirements.txt
+   python run_gui.py
    ```
 
-3. **配置LLM API**
+**注意**: 首次启动可能较慢，因为需要下载模型。记得在设置中配置您的API密钥。
+
+### API配置
+
+1. **配置LLM API**
    - 复制配置模板: `cp config/llm_config.json config/llm_config.json.backup`
    - 编辑 `config/llm_config.json` 并添加您的API密钥
    - 支持的提供商: OpenAI, DeepSeek
 
-4. **配置Whisper（可选）**
+2. **配置Whisper（可选）**
    ```bash
    python scripts/configure_whisper.py
    ```
 
-### 运行应用程序
-
-#### 图形界面模式（推荐）
-```bash
-# 自动安装依赖并启动
-python run_gui.py
-
-# 或直接启动
-python src/main_gui.py
-```
-
-#### 命令行模式
+### 命令行模式
 ```bash
 python src/main.py
 ```
