@@ -1,0 +1,25 @@
+{
+  "default_provider": "deepseek",
+  "providers": {
+    "deepseek": {
+      "api_key": "",
+      "base_url": "https://api.deepseek.com/v1",
+      "model": "deepseek-chat"
+    },
+    "openai": {
+      "api_key": "",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-4o-mini"
+    },
+    "local": {
+      "base_url": "http://localhost:8000",
+      "model": "default",
+      "api_key": null
+    }
+  },
+  "prompt_optimization": {
+    "default_task_type": "general",
+    "temperature": 0.3,
+    "max_tokens": 512
+  }
+} 

@@ -1,0 +1,38 @@
+# Configuration files with sensitive data
+config/llm_config.json
+config/whisper_config.json
+
+# Cache and temporary files
+cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Audio files
+*.wav
+*.mp3
+*.m4a
+*.flac 
