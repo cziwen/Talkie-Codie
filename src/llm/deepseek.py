@@ -29,7 +29,7 @@ class DeepSeekProvider(LLMProvider):
         url = f"{self.base_url}/chat/completions"
         
         # 设置默认参数
-        temperature = kwargs.get("temperature", 0.7)
+        temperature = kwargs.get("temperature", 0.3)
         max_tokens = kwargs.get("max_tokens", 1000)
         
         headers = {

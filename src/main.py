@@ -83,7 +83,7 @@ def main():
     
     try:
         # 执行完整的录音并转录流程
-        transcript, audio_path, transcript_path = processor.record_and_transcribe(
+        transcript, audio_path, transcript_path, volume, detected_language = processor.record_and_transcribe(
             duration=duration,
             model_size=model_size,
             device=device,
@@ -92,6 +92,8 @@ def main():
         
         print(f"\n=== 转录结果 ===")
         print(transcript)
+        if detected_language:
+            print(f"检测到的语言: {detected_language}")
         
         # LLM 优化
         if use_llm:
@@ -122,7 +124,7 @@ def main():
             print(f"使用档位: {level}")
             print("正在优化 prompt...")
             
-            result = llm_manager.optimize_prompt(transcript, task_type, level)
+            result = llm_manager.optimize_prompt(transcript, task_type, level, language=detected_language)
             
             # 处理返回结果
             if isinstance(result, tuple):

@@ -1,9 +1,9 @@
-import json
 import os
+import json
 from datetime import datetime
 from typing import Dict, Any, Optional
-from .factory import LLMFactory
-from .base import LLMProvider, PromptOptimizer
+from src.llm.factory import LLMFactory
+from src.llm.base import LLMProvider, PromptOptimizer
 
 class LLMManager:
     """LLM 管理器，统一管理所有 LLM 相关功能"""
@@ -47,15 +47,19 @@ class LLMManager:
     
     def _initialize_provider(self):
         """初始化默认提供商"""
+        self.current_provider = None  # 确保初始化前为 None
+        self.prompt_optimizer = None
         if not self.config:
             return
         
         default_provider = self.config.get("default_provider", "deepseek")
-        if isinstance(default_provider, str):
+        if isinstance(default_provider, str) and default_provider:
             try:
                 self.set_provider(default_provider)
             except Exception as e:
                 print(f"初始化默认提供商失败: {e}")
+                self.current_provider = None
+                self.prompt_optimizer = None
     
     def set_provider(self, provider_type: str) -> bool:
         """
@@ -67,7 +71,7 @@ class LLMManager:
         Returns:
             是否设置成功
         """
-        if not self.config or "providers" not in self.config:
+        if not isinstance(provider_type, str) or not provider_type or not self.config or "providers" not in self.config:
             print("配置文件中缺少 providers 配置")
             return False
         
@@ -93,7 +97,7 @@ class LLMManager:
         
         return self.current_provider.test_connection()
     
-    def optimize_prompt(self, transcript: str, task_type: str = None, level: str = "default", save_result: bool = True):
+    def optimize_prompt(self, transcript: str, task_type: Optional[str] = None, level: str = "default", save_result: bool = True, language: Optional[str] = None):
         """
         优化转录文本为更好的 prompt
         
@@ -102,6 +106,7 @@ class LLMManager:
             task_type: 任务类型
             level: 优化档位 ("default", "pro")
             save_result: 是否保存结果到缓存
+            language: 检测到的语言代码
         
         Returns:
             优化后的 prompt
@@ -115,7 +120,7 @@ class LLMManager:
             task_type = default_task_type if isinstance(default_task_type, str) else "general"
         
         try:
-            optimized_prompt = self.prompt_optimizer.optimize_prompt(transcript, task_type, level)
+            optimized_prompt = self.prompt_optimizer.optimize_prompt(transcript, task_type, level, language)
             
             # 保存优化结果到缓存
             if save_result:

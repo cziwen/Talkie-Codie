@@ -1,3 +1,5 @@
+# 推荐 Python 3.10 及以上
+PyQt6>=6.4.0
 sounddevice>=0.4.6
 scipy>=1.10.0
 numpy>=1.23.0

@@ -40,7 +40,10 @@ class AudioProcessor:
         devices = sd.query_devices()
         print("可用的音频设备:")
         for idx, dev in enumerate(devices):
-            print(f"{idx}: {dev['name']} (输入通道: {dev['max_input_channels']}, 输出通道: {dev['max_output_channels']})")
+            name = dev.get('name', f'设备{idx}')
+            max_input = dev.get('max_input_channels', 0)
+            max_output = dev.get('max_output_channels', 0)
+            print(f"{idx}: {name} (输入通道: {max_input}, 输出通道: {max_output})")
         return devices
     
     def check_audio_levels(self, duration=3, device=None):
@@ -81,13 +84,13 @@ class AudioProcessor:
         write(output_path, self.sample_rate, audio)
         print(f"录音已保存到 {output_path}")
         
-        return audio, output_path
+        return audio, output_path, volume
     
     def load_whisper_model(self, model_size="base"):
         """加载 Whisper 模型"""
-        if self.whisper_model is None or self.whisper_model.model_size != model_size:
-            print(f"正在加载 Whisper 模型: {model_size}")
-            self.whisper_model = WhisperModel(model_size, device="cpu", compute_type="int8")
+        # 为兼容性，始终重新加载模型，避免访问未知属性
+        print(f"正在加载 Whisper 模型: {model_size}")
+        self.whisper_model = WhisperModel(model_size, device="cpu", compute_type="int8")
         return self.whisper_model
     
     def transcribe_audio(self, audio_path, model_size="base", save_transcript=True):
@@ -116,9 +119,9 @@ class AudioProcessor:
             with open(transcript_path, "w", encoding="utf-8") as f:
                 f.write(transcript)
             print(f"转录结果已保存到: {transcript_path}")
-            return transcript, transcript_path
+            return transcript, transcript_path, info.language
         
-        return transcript
+        return transcript, None, info.language
     
     def record_and_transcribe(self, duration=5, model_size="base", device=None, 
                             output_path=None, save_transcript=True):
@@ -126,13 +129,12 @@ class AudioProcessor:
         print("=== 开始录音并转录流程 ===")
         
         # 1. 录音
-        audio, audio_path = self.record_audio(duration, output_path, device)
+        audio, audio_path, volume = self.record_audio(duration, output_path, device)
         
         # 2. 转录
         if save_transcript:
-            transcript, transcript_path = self.transcribe_audio(audio_path, model_size, save_transcript=True)
+            transcript, transcript_path, detected_language = self.transcribe_audio(audio_path, model_size, save_transcript=True)
         else:
-            transcript = self.transcribe_audio(audio_path, model_size, save_transcript=False)
-            transcript_path = None
+            transcript, transcript_path, detected_language = self.transcribe_audio(audio_path, model_size, save_transcript=False)
         
-        return transcript, audio_path, transcript_path 
+        return transcript, audio_path, transcript_path, volume, detected_language 

@@ -48,7 +48,7 @@ def transcribe_audio(audio_path, model_size=None):
         model_size (str): 模型大小 ("tiny", "base", "small", "medium", "large")
     
     Returns:
-        str: 转录的文本
+        tuple: (转录的文本, 检测到的语言)
     """
     # 加载配置
     config = load_whisper_config()
@@ -96,7 +96,7 @@ def transcribe_audio(audio_path, model_size=None):
     print(f"转录完成！")
     print(f"检测到的语言: {info.language} (置信度: {info.language_probability:.2f})")
     
-    return transcript.strip()
+    return transcript.strip(), info.language
 
 def main():
     print("=== Talkie-Codie 语音转录工具 ===")
@@ -123,8 +123,9 @@ def main():
     
     # 转录
     try:
-        transcript = transcribe_audio(audio_path, model_size)
+        transcript, detected_language = transcribe_audio(audio_path, model_size)
         print(f"\n转录结果:\n{transcript}")
+        print(f"检测到的语言: {detected_language}")
         
         # 保存转录结果
         output_file = audio_path.replace(".wav", "_transcript.txt")
