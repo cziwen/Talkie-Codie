@@ -1,7 +1,45 @@
-from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox, QSpinBox, QMessageBox)
+from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox, QSpinBox, QMessageBox, QProgressDialog)
+from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import Qt
 import json
 import os
 import sounddevice as sd
+from src.llm.manager import LLMManager
+
+class APITestThread(QThread):
+    """API连接测试线程"""
+    test_completed = pyqtSignal(bool, str)  # 成功状态, 错误信息
+    
+    def __init__(self, provider_type, api_key):
+        super().__init__()
+        self.provider_type = provider_type
+        self.api_key = api_key
+    
+    def run(self):
+        try:
+            # 创建临时配置进行测试
+            temp_config = {
+                "default_provider": self.provider_type,
+                "providers": {
+                    self.provider_type: {
+                        "api_key": self.api_key
+                    }
+                }
+            }
+            
+            # 创建临时LLM管理器进行测试
+            llm_manager = LLMManager()
+            llm_manager.config = temp_config
+            llm_manager._initialize_provider()
+            
+            # 测试连接
+            if llm_manager.test_connection():
+                self.test_completed.emit(True, "")
+            else:
+                self.test_completed.emit(False, "连接测试失败，请检查API密钥和网络连接")
+                
+        except Exception as e:
+            self.test_completed.emit(False, f"连接测试出错: {str(e)}")
 
 class SettingsDialog(QDialog):
     def __init__(self, parent=None):
@@ -10,6 +48,7 @@ class SettingsDialog(QDialog):
         self.setMinimumWidth(400)
         self.llm_config_path = os.path.join('config', 'llm_config.json')
         self.whisper_config_path = os.path.join('config', 'whisper_config.json')
+        self.api_test_thread = None
         self.init_ui()
         self.load_config()
 
@@ -122,14 +161,47 @@ class SettingsDialog(QDialog):
             if input_device and input_device in self.device_list:
                 self.device_combo.setCurrentText(input_device)
 
+    def test_api_connection(self, provider_type, api_key):
+        """测试API连接"""
+        if not api_key.strip():
+            return True, ""  # 空API密钥不进行测试
+        
+        # 显示进度对话框
+        progress = QProgressDialog("正在测试API连接...", None, 0, 0, self)
+        progress.setWindowModality(Qt.WindowModality.WindowModal)
+        progress.setCancelButton(None)  # 禁用取消按钮
+        progress.show()
+        
+        # 创建并启动测试线程
+        self.api_test_thread = APITestThread(provider_type, api_key)
+        self.api_test_thread.test_completed.connect(self.on_api_test_completed)
+        self.api_test_thread.test_completed.connect(progress.close)
+        self.api_test_thread.start()
+        
+        return True, ""  # 返回True表示测试已启动
+
     def save_config(self):
-        # Save LLM config
+        # 获取当前设置
+        provider = self.model_combo.currentText()
+        api_key = self.api_key_edit.text().strip()
+        
+        # 如果有API密钥，先测试连接
+        if api_key:
+            self.save_btn.setEnabled(False)
+            self.api_test_pending_save = True  # 标记等待保存
+            self.test_api_connection(provider, api_key)
+            return  # 等待异步回调
+        
+        self._do_save_config()
+
+    def _do_save_config(self):
+        provider = self.model_combo.currentText()
+        api_key = self.api_key_edit.text().strip()
+        # 保存LLM配置
         llm_cfg = {}
         if os.path.exists(self.llm_config_path):
             with open(self.llm_config_path, 'r', encoding='utf-8') as f:
                 llm_cfg = json.load(f)
-        provider = self.model_combo.currentText()
-        api_key = self.api_key_edit.text().strip()
         llm_cfg['default_provider'] = provider
         if 'providers' not in llm_cfg:
             llm_cfg['providers'] = {}
@@ -138,7 +210,7 @@ class SettingsDialog(QDialog):
         llm_cfg['providers'][provider]['api_key'] = api_key
         with open(self.llm_config_path, 'w', encoding='utf-8') as f:
             json.dump(llm_cfg, f, indent=2, ensure_ascii=False)
-        # Save Whisper config
+        # 保存Whisper配置
         whisper_cfg = {}
         if os.path.exists(self.whisper_config_path):
             with open(self.whisper_config_path, 'r', encoding='utf-8') as f:
@@ -151,4 +223,16 @@ class SettingsDialog(QDialog):
         with open(self.whisper_config_path, 'w', encoding='utf-8') as f:
             json.dump(whisper_cfg, f, indent=2, ensure_ascii=False)
         QMessageBox.information(self, 'Info', 'Settings saved!')
-        self.accept() 
+        self.accept()
+
+    def on_api_test_completed(self, success, error_message):
+        self.save_btn.setEnabled(True)
+        if not success:
+            QMessageBox.critical(self, 'API连接测试失败', 
+                               f'无法连接到{self.model_combo.currentText()} API:\n{error_message}\n\n请检查：\n1. API密钥是否正确\n2. 网络连接是否正常\n3. API服务是否可用')
+            return False
+        # 只有测试通过才保存
+        if hasattr(self, 'api_test_pending_save') and self.api_test_pending_save:
+            self.api_test_pending_save = False
+            self._do_save_config()
+        return True 
