@@ -29,6 +29,8 @@ A cross-platform desktop application that converts your voice into optimized pro
 
 **Note**: First startup may be slow due to model downloads. Configure your API key in the GUI settings.
 
+**Note**: Without API configuration, the app will only use Whisper for audio-to-text conversion.
+
 ### Configuration
 
 All settings can be configured through the GUI:
