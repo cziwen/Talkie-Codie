@@ -1,0 +1,12 @@
+{
+    "device": "cpu",
+    "compute_type": "int8",
+    "model_size": "base",
+    "beam_size": 5,
+    "language": null,
+    "task": "transcribe",
+    "vad_filter": true,
+    "vad_parameters": {
+        "min_silence_duration_ms": 500
+    }
+}
