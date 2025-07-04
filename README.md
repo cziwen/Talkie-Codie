@@ -1,3 +1,5 @@
+![Talkie-Codie Banner](assets/images/Banner.png)
+
 # Talkie-Codie
 Voice to prompt, empowering your vibe coding
 

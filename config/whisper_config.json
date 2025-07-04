@@ -9,5 +9,5 @@
   "vad_parameters": {
     "min_silence_duration_ms": 2000
   },
-  "input_device": "MacBook Pro麦克风 (id=1)"
+  "input_device": "MacBook Pro麦克风 (id=2)"
 }

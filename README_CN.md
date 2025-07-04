@@ -1,5 +1,8 @@
+![Talkie-Codie Banner](assets/images/Banner.png)
+
 # Talkie-Codie
 语音转提示词，赋能你的编程体验
+
 
 一个跨平台桌面应用程序，使用AI驱动的语音识别和语言模型增强，将您的语音转换为优化的提示词。
 

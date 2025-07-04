@@ -1,5 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtGui import QIcon
 from src.ui.components import MainWidget
 import os
 import shutil
@@ -9,6 +10,7 @@ class NewMainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Talkie-Codie - AI Rephrased Prompt')
         self.setMinimumSize(600, 400)
+        self.setWindowIcon(QIcon('assets/images/Icon.png'))
         self.main_widget = MainWidget()
         self.setCentralWidget(self.main_widget)
 
