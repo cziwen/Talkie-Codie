@@ -1,7 +1,7 @@
 ![Talkie-Codie Banner](assets/images/Banner.png)
 
 # Talkie-Codie
-Voice to prompt, empowering your vibe coding
+Voice to prompt, best for vibe coding
 
 A cross-platform desktop application that converts your voice into optimized prompts using AI-powered speech recognition and language model enhancement.
 
