@@ -6,7 +6,9 @@ Voice to prompt, best for vibe coding
 [English](README.md) | [中文](README_CN.md)
 
 ## 🎥 Demo Video
-Watch the demo to see Talkie-Codie in action: [https://youtu.be/oUjS5hgegiQ](https://youtu.be/oUjS5hgegiQ)
+Watch the demo to see Talkie-Codie in action:
+
+[![Talkie-Codie Demo](https://img.youtube.com/vi/oUjS5hgegiQ/0.jpg)](https://youtu.be/oUjS5hgegiQ)
 
 A cross-platform desktop application that converts your voice into optimized prompts using AI-powered speech recognition and language model enhancement.
 
