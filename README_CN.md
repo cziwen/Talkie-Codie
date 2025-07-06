@@ -5,6 +5,9 @@
 
 [English](README.md) | [中文](README_CN.md)
 
+## 🎥 演示视频
+观看演示视频了解 Talkie-Codie 的实际使用效果：[https://youtu.be/oUjS5hgegiQ](https://youtu.be/oUjS5hgegiQ)
+
 
 一个跨平台桌面应用程序，使用AI驱动的语音识别和语言模型增强，将您的语音转换为优化的提示词。
 
