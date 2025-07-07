@@ -15,7 +15,7 @@ class NewMainWindow(QMainWindow):
         self.setCentralWidget(self.main_widget)
 
     def closeEvent(self, event):
-        # 关闭窗口时清空 cache 目录
+        # Clear cache directory when closing window
         cache_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'cache')
         if os.path.exists(cache_dir):
             for root, dirs, files in os.walk(cache_dir, topdown=False):

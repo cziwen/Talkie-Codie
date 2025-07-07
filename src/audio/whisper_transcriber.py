@@ -4,10 +4,10 @@ import json
 
 def load_whisper_config():
     """
-    加载whisper配置文件
+    Load whisper configuration file
     
     Returns:
-        dict: 配置字典
+        dict: Configuration dictionary
     """
     config_path = os.path.join("config", "whisper_config.json")
     default_config = {
@@ -27,114 +27,114 @@ def load_whisper_config():
         try:
             with open(config_path, 'r', encoding='utf-8') as f:
                 config = json.load(f)
-                # 合并默认配置和用户配置
+                # Merge default config and user config
                 for key, value in default_config.items():
                     if key not in config:
                         config[key] = value
                 return config
         except Exception as e:
-            print(f"读取配置文件失败: {e}，使用默认配置")
+            print(f"Failed to read config file: {e}, using default config")
             return default_config
     else:
-        print("配置文件不存在，使用默认配置")
+        print("Config file not found, using default config")
         return default_config
 
 def transcribe_audio(audio_path, model_size=None):
     """
-    使用 faster-whisper 转录音频文件
+    Transcribe audio file using faster-whisper
     
     Args:
-        audio_path (str): 音频文件路径
-        model_size (str): 模型大小 ("tiny", "base", "small", "medium", "large")
+        audio_path (str): Audio file path
+        model_size (str): Model size ("tiny", "base", "small", "medium", "large")
     
     Returns:
-        tuple: (转录的文本, 检测到的语言)
+        tuple: (Transcribed text, detected language)
     """
-    # 加载配置
+    # Load configuration
     config = load_whisper_config()
     
-    # 如果传入了model_size参数，则覆盖配置文件中的设置
+    # If model_size parameter is passed, override the setting in config file
     if model_size:
         config["model_size"] = model_size
     
-    print(f"正在加载 Whisper 模型: {config['model_size']}")
-    print(f"使用设备: {config['device']}")
-    print(f"计算类型: {config['compute_type']}")
+    print(f"Loading Whisper model: {config['model_size']}")
+    print(f"Using device: {config['device']}")
+    print(f"Compute type: {config['compute_type']}")
     
-    # 加载模型 (首次运行会下载模型)
+    # Load model (will download on first run)
     model = WhisperModel(
         config["model_size"], 
         device=config["device"], 
         compute_type=config["compute_type"]
     )
     
-    print(f"开始转录音频文件: {audio_path}")
+    print(f"Starting transcription of audio file: {audio_path}")
     
-    # 准备转录参数
+    # Prepare transcription parameters
     transcribe_kwargs = {
         "beam_size": config["beam_size"],
         "task": config["task"]
     }
     
-    # 如果指定了语言，添加到参数中
+    # If language is specified, add to parameters
     if config["language"]:
         transcribe_kwargs["language"] = config["language"]
     
-    # 如果启用了VAD过滤，添加到参数中
+    # If VAD filtering is enabled, add to parameters
     if config["vad_filter"]:
         transcribe_kwargs["vad_filter"] = True
         transcribe_kwargs["vad_parameters"] = config["vad_parameters"]
     
-    # 转录音频
+    # Transcribe audio
     segments, info = model.transcribe(audio_path, **transcribe_kwargs)
     
-    # 收集转录结果
+    # Collect transcription results
     transcript = ""
     for segment in segments:
         transcript += segment.text + " "
     
-    print(f"转录完成！")
-    print(f"检测到的语言: {info.language} (置信度: {info.language_probability:.2f})")
+    print(f"Transcription completed!")
+    print(f"Detected language: {info.language} (confidence: {info.language_probability:.2f})")
     
     return transcript.strip(), info.language
 
 def main():
-    print("=== Talkie-Codie 语音转录工具 ===")
+    print("=== Talkie-Codie Speech Transcription Tool ===")
     
-    # 检查是否有录音文件
+    # Check if recording file exists
     if os.path.exists("output.wav"):
         audio_path = "output.wav"
-        print(f"找到录音文件: {audio_path}")
+        print(f"Found recording file: {audio_path}")
     else:
-        audio_path = input("请输入音频文件路径: ")
+        audio_path = input("Please enter audio file path: ")
         if not os.path.exists(audio_path):
-            print("文件不存在！")
+            print("File not found!")
             return
     
-    # 选择模型大小
-    print("\n可用的模型大小:")
-    print("tiny: 最快，准确度较低")
-    print("base: 平衡速度和准确度 (推荐)")
-    print("small: 更准确，稍慢")
-    print("medium: 高准确度，较慢")
-    print("large: 最高准确度，最慢")
+    # Select model size
+    print("\nAvailable model sizes:")
+    print("tiny: Fastest, lower accuracy")
+    print("base: Balanced speed and accuracy (recommended)")
+    print("small: More accurate, slightly slower")
+    print("medium: High accuracy, slower")
+    print("large: Highest accuracy, slowest")
     
-    model_size = input("请选择模型大小 (默认 base): ").strip() or "base"
+    model_size = input("Please select model size (default base): ").strip() or "base"
     
-    # 转录
+    # Transcribe
     try:
         transcript, detected_language = transcribe_audio(audio_path, model_size)
-        print(f"\n转录结果:\n{transcript}")
-        print(f"检测到的语言: {detected_language}")
+        print(f"\nTranscription result:\n{transcript}")
+        print(f"Detected language: {detected_language}")
         
-        # 保存转录结果
+        # Save transcription result
         output_file = audio_path.replace(".wav", "_transcript.txt")
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(transcript)
-        print(f"\n转录结果已保存到: {output_file}")
+        print(f"\nTranscription result saved to: {output_file}")
         
     except Exception as e:
-        print(f"转录过程中出现错误: {e}")
+        print(f"Error occurred during transcription: {e}")
 
 if __name__ == "__main__":
     main() 

@@ -13,7 +13,7 @@ class LocalProvider(LLMProvider):
         self.api_key = config.get("api_key")  # 可选，用于本地 API 认证
         
         if not self.base_url:
-            raise ValueError("本地模型 API 端点未提供")
+            raise ValueError("Local model API endpoint not provided")
     
     def generate(self, prompt: str, **kwargs) -> str:
         """
@@ -96,7 +96,7 @@ class LocalProvider(LLMProvider):
                 except (requests.exceptions.RequestException, KeyError, ValueError):
                     continue
         
-        raise Exception("无法连接到本地模型或响应格式不支持")
+        raise Exception("Unable to connect to local model or response format not supported")
     
     def test_connection(self) -> bool:
         """测试本地模型连接"""
@@ -105,7 +105,7 @@ class LocalProvider(LLMProvider):
             response = self.generate(test_prompt, max_tokens=10)
             return len(response) > 0
         except Exception as e:
-            print(f"本地模型连接测试失败: {e}")
+            print(f"Local model connection test failed: {e}")
             return False
     
     def get_available_models(self) -> list:
@@ -118,5 +118,5 @@ class LocalProvider(LLMProvider):
         except:
             pass
         
-        # 如果无法获取模型列表，返回默认模型
+        # If unable to get model list, return default model
         return [self.model] 

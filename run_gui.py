@@ -10,7 +10,7 @@ import importlib.util
 
 
 def check_and_install_dependencies():
-    """检查并安装必要的依赖"""
+    """Check and install necessary dependencies"""
     required_packages = [
         'PyQt6',
         'sounddevice',
@@ -32,43 +32,43 @@ def check_and_install_dependencies():
             missing_packages.append(package)
     
     if missing_packages:
-        print("检测到缺少以下依赖包:")
+        print("Detected missing dependencies:")
         for package in missing_packages:
             print(f"  - {package}")
         
-        print("\n正在安装依赖包...")
+        print("\nInstalling dependencies...")
         try:
             for package in missing_packages:
                 install_package = package
                 
-                print(f"安装 {install_package}...")
+                print(f"Installing {install_package}...")
                 subprocess.check_call([
                     sys.executable, '-m', 'pip', 'install', install_package
                 ])
             
-            print("依赖安装完成！")
+            print("Dependencies installation completed!")
             return True
             
         except subprocess.CalledProcessError as e:
-            print(f"安装依赖失败: {e}")
-            print("请手动运行: pip install -r requirements.txt")
+            print(f"Failed to install dependencies: {e}")
+            print("Please run manually: pip install -r requirements.txt")
             return False
     else:
-        print("所有依赖已安装")
+        print("All dependencies are installed")
         return True
 
 
 def main():
-    """主函数"""
-    print("=== Talkie-Codie GUI 启动器 ===")
-    print("检查依赖...")
+    """Main function"""
+    print("=== Talkie-Codie GUI Launcher ===")
+    print("Checking dependencies...")
     
     if not check_and_install_dependencies():
         return 1
     
-    print("\n启动 GUI 界面...")
+    print("\nStarting GUI interface...")
     try:
-        # 导入并运行 GUI
+        # Import and run GUI
         from src.main_gui import NewMainWindow
         import sys
         from PyQt6.QtWidgets import QApplication
@@ -78,11 +78,11 @@ def main():
         window.show()
         return app.exec()
     except ImportError as e:
-        print(f"导入错误: {e}")
-        print("请确保项目结构正确")
+        print(f"Import error: {e}")
+        print("Please ensure project structure is correct")
         return 1
     except Exception as e:
-        print(f"启动失败: {e}")
+        print(f"Startup failed: {e}")
         return 1
 
 

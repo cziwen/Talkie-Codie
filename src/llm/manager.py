@@ -57,7 +57,7 @@ class LLMManager:
             try:
                 self.set_provider(default_provider)
             except Exception as e:
-                print(f"初始化默认提供商失败: {e}")
+                print(f"Failed to initialize default provider: {e}")
                 self.current_provider = None
                 self.prompt_optimizer = None
     
@@ -72,27 +72,27 @@ class LLMManager:
             是否设置成功
         """
         if not isinstance(provider_type, str) or not provider_type or not self.config or "providers" not in self.config:
-            print("配置文件中缺少 providers 配置")
+            print("Missing providers configuration in config file")
             return False
         
         if provider_type not in self.config["providers"]:
-            print(f"配置文件中缺少 {provider_type} 的配置")
+            print(f"Missing {provider_type} configuration in config file")
             return False
         
         try:
             provider_config = self.config["providers"][provider_type]
             self.current_provider = LLMFactory.create_provider(provider_type, provider_config)
             self.prompt_optimizer = PromptOptimizer(self.current_provider)
-            print(f"成功设置 LLM 提供商: {provider_type}")
+            print(f"Successfully set LLM provider: {provider_type}")
             return True
         except Exception as e:
-            print(f"设置 LLM 提供商失败: {e}")
+            print(f"Failed to set LLM provider: {e}")
             return False
     
     def test_connection(self) -> bool:
         """测试当前 LLM 提供商连接"""
         if not self.current_provider:
-            print("未设置 LLM 提供商")
+            print("No LLM provider set")
             return False
         
         return self.current_provider.test_connection()

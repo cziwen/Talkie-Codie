@@ -7,8 +7,8 @@ import sounddevice as sd
 from src.llm.manager import LLMManager
 
 class APITestThread(QThread):
-    """API连接测试线程"""
-    test_completed = pyqtSignal(bool, str)  # 成功状态, 错误信息
+    """API connection test thread"""
+    test_completed = pyqtSignal(bool, str)  # success status, error message
     
     def __init__(self, provider_type, api_key):
         super().__init__()
@@ -17,7 +17,7 @@ class APITestThread(QThread):
     
     def run(self):
         try:
-            # 创建临时配置进行测试
+            # Create temporary config for testing
             temp_config = {
                 "default_provider": self.provider_type,
                 "providers": {
@@ -27,19 +27,19 @@ class APITestThread(QThread):
                 }
             }
             
-            # 创建临时LLM管理器进行测试
+            # Create temporary LLM manager for testing
             llm_manager = LLMManager()
             llm_manager.config = temp_config
             llm_manager._initialize_provider()
             
-            # 测试连接
+            # Test connection
             if llm_manager.test_connection():
                 self.test_completed.emit(True, "")
             else:
-                self.test_completed.emit(False, "连接测试失败，请检查API密钥和网络连接")
+                self.test_completed.emit(False, "Connection test failed, please check API key and network connection")
                 
         except Exception as e:
-            self.test_completed.emit(False, f"连接测试出错: {str(e)}")
+            self.test_completed.emit(False, f"Connection test error: {str(e)}")
 
 class SettingsDialog(QDialog):
     def __init__(self, parent=None):
@@ -147,11 +147,11 @@ class SettingsDialog(QDialog):
         if os.path.exists(self.whisper_config_path):
             with open(self.whisper_config_path, 'r', encoding='utf-8') as f:
                 whisper_cfg = json.load(f)
-            # 推理设备
+            # Inference device
             device = whisper_cfg.get('device', 'cpu')
             if device in self.infer_device_list:
                 self.infer_device_combo.setCurrentText(device)
-            # 推理精度
+            # Inference precision
             compute_type = whisper_cfg.get('compute_type', 'int8')
             self.compute_type_combo.setCurrentText(compute_type)
             self.model_size_combo.setCurrentText(whisper_cfg.get('model_size', 'base'))
@@ -162,42 +162,42 @@ class SettingsDialog(QDialog):
                 self.device_combo.setCurrentText(input_device)
 
     def test_api_connection(self, provider_type, api_key):
-        """测试API连接"""
+        """Test API connection"""
         if not api_key.strip():
-            return True, ""  # 空API密钥不进行测试
+            return True, ""  # Empty API key, skip test
         
-        # 显示进度对话框
-        progress = QProgressDialog("正在测试API连接...", None, 0, 0, self)
+        # Show progress dialog
+        progress = QProgressDialog("Testing API connection...", None, 0, 0, self)
         progress.setWindowModality(Qt.WindowModality.WindowModal)
-        progress.setCancelButton(None)  # 禁用取消按钮
+        progress.setCancelButton(None)  # Disable cancel button
         progress.show()
         
-        # 创建并启动测试线程
+        # Create and start test thread
         self.api_test_thread = APITestThread(provider_type, api_key)
         self.api_test_thread.test_completed.connect(self.on_api_test_completed)
         self.api_test_thread.test_completed.connect(progress.close)
         self.api_test_thread.start()
         
-        return True, ""  # 返回True表示测试已启动
+        return True, ""  # Return True to indicate test started
 
     def save_config(self):
-        # 获取当前设置
+        # Get current settings
         provider = self.model_combo.currentText()
         api_key = self.api_key_edit.text().strip()
         
-        # 如果有API密钥，先测试连接
+        # If API key exists, test connection first
         if api_key:
             self.save_btn.setEnabled(False)
-            self.api_test_pending_save = True  # 标记等待保存
+            self.api_test_pending_save = True  # Mark waiting for save
             self.test_api_connection(provider, api_key)
-            return  # 等待异步回调
+            return  # Wait for async callback
         
         self._do_save_config()
 
     def _do_save_config(self):
         provider = self.model_combo.currentText()
         api_key = self.api_key_edit.text().strip()
-        # 保存LLM配置
+        # Save LLM config
         llm_cfg = {}
         if os.path.exists(self.llm_config_path):
             with open(self.llm_config_path, 'r', encoding='utf-8') as f:
@@ -210,7 +210,7 @@ class SettingsDialog(QDialog):
         llm_cfg['providers'][provider]['api_key'] = api_key
         with open(self.llm_config_path, 'w', encoding='utf-8') as f:
             json.dump(llm_cfg, f, indent=2, ensure_ascii=False)
-        # 保存Whisper配置
+        # Save Whisper config
         whisper_cfg = {}
         if os.path.exists(self.whisper_config_path):
             with open(self.whisper_config_path, 'r', encoding='utf-8') as f:
@@ -228,10 +228,10 @@ class SettingsDialog(QDialog):
     def on_api_test_completed(self, success, error_message):
         self.save_btn.setEnabled(True)
         if not success:
-            QMessageBox.critical(self, 'API连接测试失败', 
-                               f'无法连接到{self.model_combo.currentText()} API:\n{error_message}\n\n请检查：\n1. API密钥是否正确\n2. 网络连接是否正常\n3. API服务是否可用')
+            QMessageBox.critical(self, 'API Connection Test Failed', 
+                               f'Unable to connect to {self.model_combo.currentText()} API:\n{error_message}\n\nPlease check:\n1. API key is correct\n2. Network connection is normal\n3. API service is available')
             return False
-        # 只有测试通过才保存
+        # Only save if test passes
         if hasattr(self, 'api_test_pending_save') and self.api_test_pending_save:
             self.api_test_pending_save = False
             self._do_save_config()

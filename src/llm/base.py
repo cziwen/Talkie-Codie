@@ -3,14 +3,14 @@ from typing import Dict, Any, Optional, List
 import json
 
 class LLMProvider(ABC):
-    """LLM 提供商的基础抽象类"""
+    """Base abstract class for LLM providers"""
     
     def __init__(self, config: Dict[str, Any]):
         """
-        初始化 LLM 提供商
+        Initialize LLM provider
         
         Args:
-            config: 配置字典，包含 API 密钥、端点等信息
+            config: Configuration dictionary containing API key, endpoint, etc.
         """
         self.config = config
         self.name = self.__class__.__name__
@@ -18,42 +18,42 @@ class LLMProvider(ABC):
     @abstractmethod
     def generate(self, prompt: str, **kwargs) -> str:
         """
-        生成文本响应
+        Generate text response
         
         Args:
-            prompt: 输入提示词
-            **kwargs: 其他参数（如温度、最大长度等）
+            prompt: Input prompt
+            **kwargs: Other parameters (such as temperature, max length, etc.)
         
         Returns:
-            生成的文本响应
+            Generated text response
         """
         pass
     
     @abstractmethod
     def test_connection(self) -> bool:
         """
-        测试 API 连接
+        Test API connection
         
         Returns:
-            连接是否成功
+            Whether connection is successful
         """
         pass
     
     def get_provider_info(self) -> Dict[str, Any]:
-        """获取提供商信息"""
+        """Get provider information"""
         return {
             "name": self.name,
             "config": {k: v for k, v in self.config.items() if k != "api_key"}
         }
 
 class PromptOptimizer:
-    """Prompt 优化器，用于处理转录文本"""
+    """Prompt optimizer for processing transcribed text"""
     
     def __init__(self, llm_provider: LLMProvider):
         self.llm_provider = llm_provider
 
     def _calculate_max_tokens(self, input_text: str, level: str) -> int:
-        """根据输入文本长度和档位计算最大 token 数"""
+        """Calculate maximum token count based on input text length and level"""
         input_length = len(input_text)
         if level == "default":
             return min(input_length, 512)
@@ -75,9 +75,9 @@ class PromptOptimizer:
         }
         instruction = task_instructions.get(task_type, task_instructions["general"])
         
-        # 如果检测到了语言，在指令中指定该语言
+        # If language is detected, specify the language in the instruction
         if language:
-            # 将语言代码转换为语言名称
+            # Convert language code to language name
             language_names = {
                 "zh": "Chinese",
                 "en": "English", 
@@ -104,7 +104,7 @@ class PromptOptimizer:
             return transcript
 
     def _extract_rephrase_content(self, text: str) -> str:
-        """直接返回内容，去除常见客套话"""
+        """Directly return content, removing common polite phrases"""
         return self._clean_output(text)
 
     def _clean_output(self, text: str) -> str:

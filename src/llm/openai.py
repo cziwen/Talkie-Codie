@@ -13,7 +13,7 @@ class OpenAIProvider(LLMProvider):
         self.model = config.get("model", "gpt-3.5-turbo")
         
         if not self.api_key:
-            raise ValueError("OpenAI API 密钥未提供")
+            raise ValueError("OpenAI API key not provided")
     
     def generate(self, prompt: str, **kwargs) -> str:
         """
@@ -54,11 +54,11 @@ class OpenAIProvider(LLMProvider):
             return result["choices"][0]["message"]["content"]
             
         except requests.exceptions.RequestException as e:
-            raise Exception(f"OpenAI API 请求失败: {e}")
+            raise Exception(f"OpenAI API request failed: {e}")
         except KeyError as e:
-            raise Exception(f"OpenAI API 响应格式错误: {e}")
+            raise Exception(f"OpenAI API response format error: {e}")
         except Exception as e:
-            raise Exception(f"OpenAI API 调用失败: {e}")
+            raise Exception(f"OpenAI API call failed: {e}")
     
     def test_connection(self) -> bool:
         """测试 OpenAI API 连接"""
@@ -67,5 +67,5 @@ class OpenAIProvider(LLMProvider):
             response = self.generate(test_prompt, max_tokens=10)
             return len(response) > 0
         except Exception as e:
-            print(f"OpenAI API 连接测试失败: {e}")
+            print(f"OpenAI API connection test failed: {e}")
             return False 

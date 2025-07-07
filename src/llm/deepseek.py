@@ -13,7 +13,7 @@ class DeepSeekProvider(LLMProvider):
         self.model = config.get("model", "deepseek-chat")
         
         if not self.api_key:
-            raise ValueError("DeepSeek API 密钥未提供")
+            raise ValueError("DeepSeek API key not provided")
     
     def generate(self, prompt: str, **kwargs) -> str:
         """
@@ -56,11 +56,11 @@ class DeepSeekProvider(LLMProvider):
             return result["choices"][0]["message"]["content"]
             
         except requests.exceptions.RequestException as e:
-            raise Exception(f"DeepSeek API 请求失败: {e}")
+            raise Exception(f"DeepSeek API request failed: {e}")
         except KeyError as e:
-            raise Exception(f"DeepSeek API 响应格式错误: {e}")
+            raise Exception(f"DeepSeek API response format error: {e}")
         except Exception as e:
-            raise Exception(f"DeepSeek API 调用失败: {e}")
+            raise Exception(f"DeepSeek API call failed: {e}")
     
     def test_connection(self) -> bool:
         """测试 DeepSeek API 连接"""
@@ -69,5 +69,5 @@ class DeepSeekProvider(LLMProvider):
             response = self.generate(test_prompt, max_tokens=10)
             return len(response) > 0
         except Exception as e:
-            print(f"DeepSeek API 连接测试失败: {e}")
+            print(f"DeepSeek API connection test failed: {e}")
             return False 
