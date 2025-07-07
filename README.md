@@ -18,6 +18,14 @@ A cross-platform desktop application that converts your voice into optimized pro
 - Python 3.10 or higher
 - Microphone access
 
+### ⚠️ Audio Dependencies Setup (IMPORTANT)
+
+**Before running the application, you may need to install system-level audio libraries.**
+
+If you encounter "PortAudio library not found" errors, please follow the audio setup guide:
+
+**📖 [Audio Dependencies Setup Guide](docs/AUDIO_SETUP.md)**
+
 ### Run Application
 
 1. **Optional: Create virtual environment**
