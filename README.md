@@ -33,13 +33,15 @@ If you encounter "PortAudio library not found" errors, please follow the audio s
    # Using conda
    conda create -n talkie-codie python=3.10
    conda activate talkie-codie
-   
-   # Or using venv
-   python -m venv talkie-codie
-   source talkie-codie/bin/activate  # On Windows: talkie-codie\Scripts\activate
    ```
 
-2. **Launch GUI (auto-installs dependencies)**
+2. CUDA Support (Optional)
+If you have an NVIDIA GPU and want to use CUDA acceleration, manually install pytorch accordingly (for example, my GPU is sm 120 architecture):
+   ```bash
+   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+   ```
+
+3. **Launch GUI (auto-installs dependencies)**
    ```bash
    python run_gui.py
    ```

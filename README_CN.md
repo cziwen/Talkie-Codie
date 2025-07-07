@@ -33,13 +33,16 @@
    # 使用 conda
    conda create -n talkie-codie python=3.10
    conda activate talkie-codie
-   
-   # 或使用 venv
-   python -m venv talkie-codie
-   source talkie-codie/bin/activate  # Windows: talkie-codie\Scripts\activate
    ```
 
-2. **启动图形界面（自动安装依赖）**
+
+2. CUDA 支持（可选）
+如果您有 NVIDIA GPU 并想使用 CUDA 加速，请手动安装对应的 pytorch 版本 （以我的 GPU 是 sm 120 架构为例子）
+   ```bash
+   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+   ```
+
+3. **启动图形界面（自动安装依赖）**
    ```bash
    python run_gui.py
    ```
